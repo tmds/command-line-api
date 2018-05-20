@@ -247,6 +247,7 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("-c value-for-c -b value-for-a outer");
 
+            result.ValueForOption("-a").Should().Be("value-for-a");
             result.ValueForOption("-c").Should().Be("value-for-c");
             result.HasOption("-b").Should().BeTrue();
             //result.Symbols.ElementAt(0).Name.Should().Be("outer");
