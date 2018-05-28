@@ -245,7 +245,7 @@ namespace System.CommandLine.Tests
                 .AddOption("-b", "")
                 .AddOption("-c", "", a => a.ExactlyOne())
                 .Build()
-                .Parse("-c value-for-c -b value-for-a outer");
+                .Parse("-c value-for-c -b outer value-for-a");
 
             result.ValueForOption("-a").Should().Be("value-for-a");
             result.ValueForOption("-c").Should().Be("value-for-c");
