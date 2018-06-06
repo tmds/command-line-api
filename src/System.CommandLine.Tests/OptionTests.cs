@@ -170,7 +170,7 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("value-for-a");
 
-            result.ValueForOption("-a").Should().Be("value-for-a");
+            result["-a"].Should().Be("value-for-a");
         }
 
         [Fact]
@@ -183,8 +183,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("value-for-a value-for-c");
 
-            result.ValueForOption("-a").Should().Be("value-for-a");
-            result.ValueForOption("-c").Should().Be("value-for-c");
+            result["-a"].Should().Be("value-for-a");
+            result["-c"].Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
@@ -198,8 +198,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("-a value-for-a value-for-c");
 
-            result.ValueForOption("-a").Should().Be("value-for-a");
-            result.ValueForOption("-c").Should().Be("value-for-c");
+            result["-a"].Should().Be("value-for-a");
+            result["-c"].Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
@@ -216,8 +216,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse(prefix + "c value-for-c " + prefix + "a value-for-a");
 
-            result.ValueForOption(prefix + "a").Should().Be("value-for-a");
-            result.ValueForOption(prefix + "c").Should().Be("value-for-c");
+            result[prefix + "a"].Should().Be("value-for-a");
+            result[prefix + "c"].Should().Be("value-for-c");
             result.HasOption(prefix + "b").Should().BeFalse();
         }
 
@@ -231,8 +231,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("-c value-for-c value-for-a");
 
-            result.ValueForOption("-a").Should().Be("value-for-a");
-            result.ValueForOption("-c").Should().Be("value-for-c");
+            result["-a"].Should().Be("value-for-a");
+            result["-c"].Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
@@ -245,10 +245,10 @@ namespace System.CommandLine.Tests
                 .AddOption("-b", "")
                 .AddOption("-c", "", a => a.ExactlyOne())
                 .Build()
-                .Parse("-c value-for-c -b outer value-for-a");
+                .Parse("-c value-for-c -b value-for-a outer");
 
-            result.ValueForOption("-a").Should().Be("value-for-a");
-            result.ValueForOption("-c").Should().Be("value-for-c");
+            result["-a"].Should().Be("value-for-a");
+            result["-c"].Should().Be("value-for-c");
             result.HasOption("-b").Should().BeTrue();
             //result.Command().Children.Should().ContainSingle(x => x.Name == "outer" && x is Command);
         }

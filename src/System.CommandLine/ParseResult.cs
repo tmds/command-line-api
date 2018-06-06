@@ -11,6 +11,7 @@ namespace System.CommandLine
         private readonly List<ParseError> _errors = new List<ParseError>();
 
         internal ParseResult(
+            //Dictionary<string,Command> rootCommands,
             Command rootCommand,
             Command command,
             IReadOnlyCollection<string> tokens,
@@ -19,6 +20,7 @@ namespace System.CommandLine
             IReadOnlyCollection<ParseError> errors,
             string rawInput)
         {
+            //RootCommands = RootCommands;
             RootCommand = rootCommand;
             Command = command;
             Tokens = tokens;
@@ -36,6 +38,7 @@ namespace System.CommandLine
 
         public Command Command { get; }
 
+        //public Dictionary<string, Command> RootCommands { get; }
         public Command RootCommand { get; }
 
         public IReadOnlyCollection<ParseError> Errors => _errors;
@@ -79,8 +82,15 @@ namespace System.CommandLine
                         }
                     }
                 }
+            }
+        }
 
-                var error = symbol.Validate();
+        private void CheckForErrors()
+        {
+            //foreach (var rootCommand in RootCommands.Values.)
+            foreach (var option in RootCommand.AllSymbols())
+            {
+                var error = option.Validate();
 
                 if (error != null)
                 {
@@ -97,12 +107,9 @@ namespace System.CommandLine
             }
         }
 
-        public object ValueForOption(
-            string alias) =>
-            ValueForOption<object>(alias);
+        public object ValueForOption( string alias) => ValueForOption<object>(alias);
 
-        public T ValueForOption<T>(
-            string alias)
+        public T ValueForOption<T>(string alias)
         {
             if (string.IsNullOrWhiteSpace(alias))
             {
