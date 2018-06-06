@@ -11,7 +11,6 @@ namespace System.CommandLine
         private readonly List<ParseError> _errors = new List<ParseError>();
 
         internal ParseResult(
-            //Dictionary<string,Command> rootCommands,
             Command rootCommand,
             Command command,
             IReadOnlyCollection<string> tokens,
@@ -20,7 +19,6 @@ namespace System.CommandLine
             IReadOnlyCollection<ParseError> errors,
             string rawInput)
         {
-            //RootCommands = RootCommands;
             RootCommand = rootCommand;
             Command = command;
             Tokens = tokens;
@@ -38,7 +36,6 @@ namespace System.CommandLine
 
         public Command Command { get; }
 
-        //public Dictionary<string, Command> RootCommands { get; }
         public Command RootCommand { get; }
 
         public IReadOnlyCollection<ParseError> Errors => _errors;
@@ -87,10 +84,37 @@ namespace System.CommandLine
 
         private void CheckForErrors()
         {
-            //foreach (var rootCommand in RootCommands.Values.)
-            foreach (var option in RootCommand.AllSymbols())
+            foreach (var symbol in RootCommand.AllSymbols().ToArray())
             {
-                var error = option.Validate();
+                if (symbol is Command command)
+                {
+                    foreach (var definition in command.Definition.SymbolDefinitions)
+                    {
+                        if (definition.ArgumentDefinition.HasDefaultValue &&
+                            command.Children[definition.Name] == null)
+                        {
+                            switch (definition)
+                            {
+                                case OptionDefinition optionDefinition:
+                                    command.AddImplicitOption(optionDefinition);
+                                    break;
+                            }
+                        }
+                    }
+
+                    if (command.Definition.ArgumentDefinition.HasDefaultValue &&
+                        command.Arguments.Count == 0)
+                    {
+                        switch (command.Definition.ArgumentDefinition.GetDefaultValue())
+                        {
+                            case string arg:
+                                command.TryTakeToken(new Token(arg, TokenType.Argument));
+                                break;
+                        }
+                    }
+                }
+
+                var error = symbol.Validate();
 
                 if (error != null)
                 {

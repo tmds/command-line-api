@@ -254,4 +254,3 @@ namespace System.CommandLine.Tests
         }
     }
 }
-
