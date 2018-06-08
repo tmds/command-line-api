@@ -276,25 +276,5 @@ namespace System.CommandLine.Tests
                   .Should()
                   .ContainSingle("Unrecognized command or argument '456'");
         }
-
-        [Theory]
-        [InlineData(":")]
-        [InlineData("=")]
-        public void When_an_option_contains_a_delimiter_then_an_informative_error_is_returned(string delimiter)
-        {
-            var parser = new Parser(
-                new OptionDefinition(
-                    "-x", "",
-                    new ArgumentDefinitionBuilder()
-                        .WithDefaultValue(() => "123")
-                        .ParseArgumentsAs<int>()));
-
-            var result = parser.Parse("-x");
-
-            result.Errors
-                  .Select(e => e.Message)
-                  .Should()
-                  .Contain("Required argument missing for option: -x");
-        }
     }
 }

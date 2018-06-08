@@ -114,7 +114,7 @@ namespace System.CommandLine
                             {
                                 optionQueue.RemoveAt(0);
                                 var newToken = new Token("-" + optionSymdef.Name, TokenType.Option);
-                                symbolForToken = symbol.TryTakeToken(newToken);
+                                symbolForToken = topLevelSymbol.TryTakeToken(newToken);
                                 var nextSymbolForToken = symbolForToken?.TryTakeToken(token);
                                 if (nextSymbolForToken != null)
                                 {

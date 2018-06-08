@@ -24,7 +24,7 @@ namespace System.CommandLine.Tests
         public async Task Boolean_parameters_will_accept_zero_arguments()
         {
             var builder = new CommandLineBuilder()
-                          .AddCommandFromMethod(GetMethodInfo(nameof(Method_taking_bool)), this)
+                          .ConfigureFromMethod(GetMethodInfo(nameof(Method_taking_bool)), this)
                           .Build();
 
             var result = builder.Parse($"{CommandLineBuilder.ExeName} --value");
@@ -47,7 +47,7 @@ namespace System.CommandLine.Tests
         public async Task Boolean_parameters_will_accept_one_argument(string commandLine, bool expected)
         {
             var builder = new CommandLineBuilder()
-                          .AddCommandFromMethod(GetMethodInfo(nameof(Method_taking_bool)), this)
+                          .ConfigureFromMethod(GetMethodInfo(nameof(Method_taking_bool)), this)
                           .Build();
 
             await builder.InvokeAsync(commandLine, _testConsole);
