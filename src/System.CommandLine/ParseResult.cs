@@ -143,7 +143,20 @@ namespace System.CommandLine
             return this[alias].GetValueOrDefault<T>();
         }
 
-        public Symbol this[string alias] => Command.Children[alias];
+        public Symbol this[string alias]
+        {
+            get
+            {
+                var command = Command;
+                while (command != null)
+                {
+                    if (command.Children[alias] != null) return command.Children[alias];
+                    command = command.Parent;
+                }
+
+                return null;
+            }
+        }
 
         public override string ToString() => $"{nameof(ParseResult)}: {this.Diagram()}";
     }

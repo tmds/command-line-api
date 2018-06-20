@@ -50,6 +50,8 @@ namespace System.CommandLine
             return symbol;
         }
 
+        public bool HasOption(string alias) => Children[alias] != null;
+
         public object ValueForOption(
             string alias) =>
             ValueForOption<object>(alias);

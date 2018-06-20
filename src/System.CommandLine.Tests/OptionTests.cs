@@ -170,7 +170,7 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("value-for-a");
 
-            result["-a"].Should().Be("value-for-a");
+            result.ValueForOption("-a").Should().Be("value-for-a");
         }
 
         [Fact]
@@ -183,8 +183,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("value-for-a value-for-c");
 
-            result["-a"].Should().Be("value-for-a");
-            result["-c"].Should().Be("value-for-c");
+            result.ValueForOption("-a").Should().Be("value-for-a");
+            result.ValueForOption("-c").Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
@@ -198,8 +198,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("-a value-for-a value-for-c");
 
-            result["-a"].Should().Be("value-for-a");
-            result["-c"].Should().Be("value-for-c");
+            result.ValueForOption("-a").Should().Be("value-for-a");
+            result.ValueForOption("-c").Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
@@ -216,8 +216,8 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse(prefix + "c value-for-c " + prefix + "a value-for-a");
 
-            result[prefix + "a"].Should().Be("value-for-a");
-            result[prefix + "c"].Should().Be("value-for-c");
+            result.ValueForOption(prefix + "a").Should().Be("value-for-a");
+            result.ValueForOption(prefix + "c").Should().Be("value-for-c");
             result.HasOption(prefix + "b").Should().BeFalse();
         }
 
@@ -231,26 +231,42 @@ namespace System.CommandLine.Tests
                 .Build()
                 .Parse("-c value-for-c value-for-a");
 
-            result["-a"].Should().Be("value-for-a");
-            result["-c"].Should().Be("value-for-c");
+            result.ValueForOption("-a").Should().Be("value-for-a");
+            result.ValueForOption("-c").Should().Be("value-for-c");
             result.HasOption("-b").Should().BeFalse();
         }
 
+        [Fact]
+        public void When_multiple_option_arguments_are_provided_with_b_option_positions_are_assumed()
+        {
+            var result = new CommandLineBuilder()
+                .AddOption("-a", "", a => a.ExactlyOne())
+                .AddOption("-b", "")
+                .AddOption("-c", "", a => a.ExactlyOne())
+                .AddCommand("outer", "")
+                .Build()
+                .Parse("-c value-for-c -b value-for-a outer");
+
+            // using RootCommand here guarantees that the option belongs to testhost
+            result.RootCommand.Name.Should().Be("testhost");
+            result.RootCommand.ValueForOption("-a").Should().Be("value-for-a");
+            result.RootCommand.HasOption("-b").Should().BeTrue();
+            result.HasOption("-b").Should().BeTrue();
+            result.RootCommand.ValueForOption("-c").Should().Be("value-for-c");
+            // using Command here assume 'outer' command
+            result.Command.Name.Should().Be("outer");
+        }
+
         //[Fact]
-        //public void When_multiple_option_arguments_are_provided_with_b_option_positions_are_assumed()
+        //public void When_multiple_option_arguments_are_provided_with_b_option_positions_are_assumed2()
         //{
         //    var result = new CommandLineBuilder()
+        //        .AddOption("-d", "")
         //        .AddCommand("outer", "")
-        //        .AddOption("-a", "", a => a.ExactlyOne())
-        //        .AddOption("-b", "")
-        //        .AddOption("-c", "", a => a.ExactlyOne())
         //        .Build()
-        //        .Parse("-c value-for-c -b value-for-a outer");
+        //        .Parse("outer -d");
 
-        //    result.ValueForOption("-a").Should().Be("value-for-a");
-        //    result.ValueForOption("-c").Should().Be("value-for-c");
-        //    result.HasOption("-b").Should().BeTrue();
-        //    //result.Command().Children.Should().ContainSingle(x => x.Name == "outer" && x is Command);
+        //    result.HasOption("-d").Should().BeTrue();
         //}
     }
 }

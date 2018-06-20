@@ -16,6 +16,8 @@ namespace System.CommandLine.Builder
 
         public List<string> Aliases { get; } = new List<string>();
 
+        public CommandDefinitionBuilder Command { get; set; }
+
         public OptionDefinition BuildOptionDefinition()
         {
             return new OptionDefinition(Aliases, Description, BuildArguments());

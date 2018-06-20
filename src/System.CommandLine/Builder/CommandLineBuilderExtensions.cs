@@ -9,6 +9,8 @@ namespace System.CommandLine.Builder
 {
     public static class CommandLineBuilderExtensions
     {
+        private static CommandDefinitionBuilder _InnerCommand = null;
+
         public static TBuilder AddCommand<TBuilder>(
             this TBuilder builder,
             string name,
@@ -20,6 +22,8 @@ namespace System.CommandLine.Builder
             var commandDefinitionBuilder = new CommandDefinitionBuilder(name, builder) {
                 Description = description
             };
+
+            _InnerCommand = commandDefinitionBuilder;
 
             symbols?.Invoke(commandDefinitionBuilder);
 
@@ -89,7 +93,8 @@ namespace System.CommandLine.Builder
             where TBuilder : CommandDefinitionBuilder
         {
             var optionDefinitionBuilder = new OptionDefinitionBuilder(aliases, builder) {
-                Description = description
+                Description = description,
+                Command = _InnerCommand
             };
 
             arguments?.Invoke(optionDefinitionBuilder.Arguments);

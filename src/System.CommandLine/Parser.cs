@@ -1,3 +1,4 @@
+#define UNNAMED
 // Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -38,7 +39,9 @@ namespace System.CommandLine
              */
 
 
+#if UNNAMED
             var optionQueue = GatherOptions(Configuration.SymbolDefinitions).ToList();
+#endif
 
             while (unparsedTokens.Any())
             {
@@ -84,13 +87,13 @@ namespace System.CommandLine
                     if (symbolForToken != null)
                     {
                         allSymbols.Add(symbolForToken);
-
                         if (symbolForToken is Command command)
                         {
                             innermostCommand = command;
                         }
 
                         added = true;
+#if UNNAMED
                         if (token.Type is TokenType.Option)
                         {
                             var existing = optionQueue.FirstOrDefault(symdef => symdef.Name == symbolForToken.Name);
@@ -100,30 +103,33 @@ namespace System.CommandLine
                                 optionQueue.Remove(existing);
                             }
                         }
+#endif
                         break;
                     }
 
                     if (token.Type == TokenType.Argument &&
                         topLevelSymbol.SymbolDefinition is CommandDefinition)
                     {
+#if UNNAMED
                         var optionSymdef = optionQueue.FirstOrDefault();
                         if (optionSymdef != null)
                         {
-                            if (optionSymdef.ArgumentDefinition.HasDefaultValue &&
-                                optionSymdef.ArgumentDefinition.GetDefaultValue().ToString() == token.Value)
+                            //if (!optionSymdef.ArgumentDefinition.HasDefaultValue ||
+                            //    optionSymdef.ArgumentDefinition.GetDefaultValue().ToString() != token.Value)
                             {
                                 optionQueue.RemoveAt(0);
                                 var newToken = new Token("-" + optionSymdef.Name, TokenType.Option);
                                 symbolForToken = topLevelSymbol.TryTakeToken(newToken);
-                                var nextSymbolForToken = symbolForToken?.TryTakeToken(token);
+                                Symbol nextSymbolForToken = symbolForToken?.TryTakeToken(token);
                                 if (nextSymbolForToken != null)
                                 {
                                     allSymbols.Add(symbolForToken);
-                                    allSymbols.Add(nextSymbolForToken);
+                                    //allSymbols.Add(nextSymbolForToken);
                                     added = true;
                                 }
                             }
                         }
+#endif
                         break;
                     }
                 }
@@ -150,6 +156,7 @@ namespace System.CommandLine
                 rawInput);
         }
 
+#if UNNAMED
         private IEnumerable<SymbolDefinition> GatherOptions(SymbolDefinitionSet symbolDefinitions)
         {
             var optionList = new List<SymbolDefinition>();
@@ -169,6 +176,7 @@ namespace System.CommandLine
             }
             return optionList;
         }
+#endif
 
         internal IReadOnlyCollection<string> NormalizeRootCommand(IReadOnlyCollection<string> args)
         {

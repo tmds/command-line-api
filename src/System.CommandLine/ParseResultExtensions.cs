@@ -134,7 +134,16 @@ namespace System.CommandLine
                 throw new ArgumentNullException(nameof(parseResult));
             }
 
-            return parseResult.Command.Children.Any(s => s.SymbolDefinition == optionDefinition);
+            //return parseResult.Command.Children
+            //        .Any(s => s.SymbolDefinition == optionDefinition);
+            Command command = parseResult.Command;
+            while (command != null)
+            {
+                if (command.Children.Any(s => s.SymbolDefinition == optionDefinition)) return true;
+                command = command.Parent;
+            }
+
+            return false;
         }
 
         public static bool HasOption(
@@ -146,7 +155,14 @@ namespace System.CommandLine
                 throw new ArgumentNullException(nameof(parseResult));
             }
 
-            return parseResult.Command.Children.Contains(alias);
+            Command command = parseResult.Command;
+            while (command != null)
+            {
+                if (command.Children.Contains(alias)) return true;
+                command = command.Parent;
+            }
+
+            return false;
         }
 
         public static IEnumerable<string> Suggestions(
