@@ -38,6 +38,21 @@ namespace System.CommandLine.Tests.SampleDotNetCli
             Other
         }
 
+        public enum NuGetPackageType
+        {
+            All = 0,
+            Package = 1,
+            Template = 2,
+            Tool = 4
+        }
+
+        public class NuGetSuggestions
+        {
+            public NuGetSuggestions(NuGetPackageType PackageType = NuGetPackageType.Package)
+            {
+                // Do the work
+            }
+        }
 
         internal class InstallCommand : NewCommand
         {
