@@ -54,7 +54,7 @@ namespace System.CommandLine.Tests.SampleDotNetCli
             }
         }
 
-        internal class InstallCommand : NewCommand
+        internal class NewInstallCommand : NewCommand
         {
             [Argument()]
             public string TemplateName { get; set; }
@@ -65,7 +65,7 @@ namespace System.CommandLine.Tests.SampleDotNetCli
             }
         }
 
-        internal class UninstallCommand : NewCommand
+        internal class NewUninstallCommand : NewCommand
         {
             [Argument()]
             public string TemplateName { get; set; }
@@ -77,7 +77,7 @@ namespace System.CommandLine.Tests.SampleDotNetCli
         }
 
         [Alias("l")]
-        internal class ListCommand : NewCommand
+        internal class NewListCommand : NewCommand
         {
             [Option(Optional: true)]
             public FilterType? Type { get; set; }
