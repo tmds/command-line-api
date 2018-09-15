@@ -7,13 +7,13 @@ namespace System.CommandLine.Tests.SampleDotNetCli.Core
     {
         string[] Aliases { get; set; }
 
-        Task<int> Invoke();
+        Task<int> InvokeAsync();
     }
 
     public abstract class Command : ICommand
     {
         public string[] Aliases { get; set; }
 
-        public abstract Task<int> Invoke();
+        public abstract Task<int> InvokeAsync();
     }
 }
