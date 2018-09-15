@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+// Copyright (c) .NET Foundation and contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
@@ -24,6 +24,21 @@ namespace DragonFruit
             }
             Console.WriteLine($"Creating {count} banana {(count == 1 ? "smoothie" : "smoothies")} with {flavor}");
             return 0;
+        }
+
+        static int MainNew([Alias("n")]string name = null, string output = null)
+        {
+
+        }
+
+        static int MainNewList(ListType type = null, string lang = null)
+        {
+
+        }
+
+        public enum ListType
+        {
+            Project, Item, Other
         }
     }
 }
