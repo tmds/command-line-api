@@ -2,43 +2,73 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Linq;
+using System.CommandLine.DragonFruit;
 
-namespace DragonFruit
+public class Program
 {
-    class Program
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="diagnostics"></param>
+    /// <param name="info"></param>
+    /// <param name="listRuntimes"></param>
+    /// <param name="listSdks"></param>
+    /// <param name="version"></param>
+    /// <returns></returns>
+    static int Main(
+        [Alias("d")]
+        bool diagnostics,
+        bool info,
+        [Alias("list-runtimes")]
+        bool listRuntimes,
+        [Alias("list-sdks")]
+        bool listSdks,
+        bool version)
     {
-        /// <summary>
-        /// Hello
-        /// </summary>
-        /// <param name="verbose">Show verbose output</param>
-        /// <param name="flavor">Which flavor to use</param>
-        /// <param name="count">How many smoothies?</param>
-        static int Main(
-            bool verbose,
-            string flavor = "chocolate",
-            int count = 1)
+
+        return 0;
+    }
+
+    public class New
+    {
+        public static int Main([Alias("n")]string name = null, [Alias("o")]string output = null, bool force = false)
         {
-            if (verbose)
+            return 42;
+        }
+
+        [Alias("l")]
+        public class List
+        {
+            static int Main(ListType? type = null, [Alias("lang")] string language = null)
             {
-                Console.WriteLine("Running in verbose mode");
+                string[] LanguageSuggestions(){ return new string[] { "C#", "F#", "VB", "COBOL" }; }
+                bool LanguageValidation(string value)
+                    { return LanguageSuggestions().Contains(value); }
+                return 42;
+
             }
-            Console.WriteLine($"Creating {count} banana {(count == 1 ? "smoothie" : "smoothies")} with {flavor}");
-            return 0;
+
+            enum ListType{Project, Item, Other}
         }
 
-        static int MainNew([Alias("n")]string name = null, string output = null)
+        [Alias("i")]
+        public class Install
         {
+            static int Main(string target)
+            {
+                return 42;
 
+            }
         }
-
-        static int MainNewList(ListType type = null, string lang = null)
+        [Alias("u")]
+        class Uninstall
         {
+            static int Main(string target)
+            {
+                return 42;
 
-        }
-
-        public enum ListType
-        {
-            Project, Item, Other
+            }
         }
     }
 }
