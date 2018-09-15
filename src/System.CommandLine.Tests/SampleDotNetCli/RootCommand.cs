@@ -16,6 +16,6 @@ namespace System.CommandLine.Tests.SampleDotNetCli
         public bool ListRuntimes{ get; set; }
 
         // TODO: If we use inheritance, we will need to do something other than abstract to indicate not invokable, currently just this. 
-        public override Task<int> Invoke() => throw new NotImplementedException();
+        public override Task<int> InvokeAsync() => throw new NotImplementedException();
     }
 }

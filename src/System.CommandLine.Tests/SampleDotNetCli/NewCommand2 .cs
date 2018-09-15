@@ -1,7 +1,7 @@
 using System.CommandLine.Tests.SampleDotNetCli.Core;
 using System.Threading.Tasks;
 
-namespace System.CommandLine.Tests.SampleDotNetCli
+namespace System.CommandLine.Tests.SampleDotNetCli2
 {
     public enum NugetPackageType
     {
