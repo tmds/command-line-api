@@ -10,11 +10,11 @@ namespace System.CommandLine.Tests.SampleDotNetCli
     {
         [Optional]
         [Alias("n")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Optional]
         [Alias("o")]
-        public string? Output { get; set; }
+        public string Output { get; set; }
 
         [Optional]
         public bool Force { get; set; }
@@ -22,19 +22,14 @@ namespace System.CommandLine.Tests.SampleDotNetCli
         [Optional][Alias("lang")]
         public string Language { get; set; }
 
-        public NewCommand(string templateName)
-        {
-            TemplateName = templateName;
-        }
-        public string TemplateName { get; set; }
-
         public override Task<int> Invoke()
         {
             throw new NotImplementedException();
         }
 
         [Optional]
-        [Alias("nuget-source", true)]
+        // TODO: Let's automate this alias based on capping in the name
+       //[Alias("nuget-source", true)] 
         public string NugetSource { get; set; }
 
         internal enum FilterType
@@ -47,9 +42,14 @@ namespace System.CommandLine.Tests.SampleDotNetCli
 
         internal class InstallCommand : NewCommand
         {
+            public InstallCommand(string templateName)
+            {
+                TemplateName = templateName;
+            }
+
             public string TemplateName { get; set; }
 
-            public new override Task<int> Invoke()
+            public  override Task<int> Invoke()
             {
                 throw new NotImplementedException();
             }
@@ -57,9 +57,14 @@ namespace System.CommandLine.Tests.SampleDotNetCli
 
         internal class UninstallCommand : NewCommand
         {
+            public UninstallCommand(string templateName)
+            {
+                TemplateName = templateName;
+            }
+
             public string TemplateName { get; set; }
 
-            public new override Task<int> Invoke()
+            public override Task<int> Invoke()
             {
                 throw new NotImplementedException();
             }
