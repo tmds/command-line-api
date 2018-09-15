@@ -3,7 +3,7 @@ using System.CommandLine.Tests.SampleDotNetCli.Core;
 
 namespace System.CommandLine.Tests.SampleDotNetCli
 {
-    internal class RootCommand : Core.Command
+    internal abstract class RootCommand : Core.Command
     {
         public bool Info { get; set; }
         public bool Version { get; set; }

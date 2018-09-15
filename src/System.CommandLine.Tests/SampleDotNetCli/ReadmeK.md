@@ -4,3 +4,4 @@ Fundamental questions:
 
 - composition or inheritance to define relationships
   - inheritance prohibits the use of abstract to indicate not-invokable 
+  - **inhertance allows final command to be a natural conflating of data regardless of structure
