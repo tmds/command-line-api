@@ -1,4 +1,4 @@
-﻿using System.CommandLine.Tests.ConventionFree.Core;
+using System.CommandLine.Tests.ConventionFree.Core;
 using System.Threading.Tasks;
 
 namespace System.CommandLine.Tests.ConventionFree
@@ -25,12 +25,12 @@ namespace System.CommandLine.Tests.ConventionFree
         {
             public NewHiddenNuGetCommand()
             {
-                TemplateNameOption = new Argument<string>(
+                TemplateName = new Argument<string>(
                      suggestions: SuggestionFunc);
             }
 
             [Argument(help:"I still need help, ZOMBIES")]
-            public Argument<string> TemplateNameOption { get; }
+            public Argument<string> TemplateName { get; }
             [Option(alias: "lang", suggestions: new string[] { "C#", "VB", "F#", "FORTRAN 77" },
                 help:"OMG Help me")]
             public string Language { get; }
@@ -40,7 +40,7 @@ namespace System.CommandLine.Tests.ConventionFree
             // If you can, drop lambda and use a method directly
             public Func<string[]> SuggestionFunc
                 => () => NugetSuggestions.GetSuggestions(PreRelease: Prerelease,
-                            Match: TemplateNameOption, NugetSource: NugetSource,
+                            Match: TemplateName, NugetSource: NugetSource,
                             PackageType: NugetPackageType.Template);
 
         }
@@ -58,7 +58,7 @@ namespace System.CommandLine.Tests.ConventionFree
 
             public override Task<int> InvokeAsync()
             {
-                string tName = TemplateNameOption.Value;
+                string templateName = TemplateName;
                 throw new NotImplementedException();
             }
         }
@@ -66,7 +66,6 @@ namespace System.CommandLine.Tests.ConventionFree
         [Alias("l")]
         internal class NewListCommand : NewHiddenNuGetCommand
         {
-            [Option()] // DefaultValue = FilterType.Project for C# 6
             public FilterType Type { get; set; } = FilterType.Project;
 
             public override Task<int> InvokeAsync()

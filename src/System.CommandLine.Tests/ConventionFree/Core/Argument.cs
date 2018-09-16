@@ -8,7 +8,6 @@ namespace System.CommandLine.Tests.ConventionFree
         public bool Optional { get; private set; }
         public Func<IEnumerable< string>> Suggestions { get; private set; }
         public Func<IEnumerable<string>> Validation { get; private set; }
-
         public T Value;
 
         public Argument(bool optional = false, Func<IEnumerable<string>> suggestions = null, Func<IEnumerable<string>> validation = null)
@@ -18,9 +17,6 @@ namespace System.CommandLine.Tests.ConventionFree
             Validation =  validation;
         }
 
-        public static implicit operator T(Argument<T> argument)
-        {
-            return argument.Value;
-        }
+        public static implicit operator T(Argument<T> argument) => argument.Value;
     }
 }
