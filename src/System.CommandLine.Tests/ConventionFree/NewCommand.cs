@@ -25,12 +25,12 @@ namespace System.CommandLine.Tests.ConventionFree
         {
             public NewHiddenNuGetCommand()
             {
-                TemplateNameOption = new Argument<string>(
+                TemplateNameArg = new Argument<string>(
                      suggestions: SuggestionFunc);
             }
 
             [Argument(help:"I still need help, ZOMBIES")]
-            public Argument<string> TemplateNameOption { get; }
+            public Argument<string> TemplateNameArg { get; }
             [Option(alias: "lang", suggestions: new string[] { "C#", "VB", "F#", "FORTRAN 77" },
                 help:"OMG Help me")]
             public string Language { get; }
@@ -40,7 +40,7 @@ namespace System.CommandLine.Tests.ConventionFree
             // If you can, drop lambda and use a method directly
             public Func<string[]> SuggestionFunc
                 => () => NugetSuggestions.GetSuggestions(PreRelease: Prerelease,
-                            Match: TemplateNameOption, NugetSource: NugetSource,
+                            Match: TemplateNameArg, NugetSource: NugetSource,
                             PackageType: NugetPackageType.Template);
 
         }

@@ -1,4 +1,4 @@
-﻿namespace System.CommandLine.Tests.ConventionFree
+﻿namespace System.CommandLine.Tests.ConventionFree.Core
 {
     public class ArgumentAttribute : Attribute
     {
