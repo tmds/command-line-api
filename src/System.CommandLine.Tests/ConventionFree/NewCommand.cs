@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.CommandLine.Tests.ConventionFree.Core;
 using System.Threading.Tasks;
 
@@ -25,24 +26,25 @@ namespace System.CommandLine.Tests.ConventionFree
         {
             public NewHiddenNuGetCommand()
             {
-                TemplateNameArg = new Argument<string>(
-                     suggestions: SuggestionFunc);
+                //TemplateNameArg = new Argument<string>(
+                //     suggestions: SuggestionFunc);
             }
 
-            [Argument(help:"I still need help, ZOMBIES")]
-            public Argument<string> TemplateNameArg { get; }
+            [Argument(help:"I still need help, ZOMBIES", suggestionProvider:typeof(TemplateNameSuggestionProvider)]
+            public string TemplateNameArg { get; }
             [Option(alias: "lang", suggestions: new string[] { "C#", "VB", "F#", "FORTRAN 77" },
                 help:"OMG Help me")]
             public string Language { get; }
             public bool Prerelease { get; set; }
             public string NugetSource { get; set; }
 
-            // If you can, drop lambda and use a method directly
-            public Func<string[]> SuggestionFunc
-                => () => NugetSuggestions.GetSuggestions(PreRelease: Prerelease,
-                            Match: TemplateNameArg, NugetSource: NugetSource,
+            public class TemplateNameSuggestionProvider : ISuggestionProvider<NewHiddenNuGetCommand>
+            {
+                public IEnumerable<string> ProvideSuggestions(NewHiddenNuGetCommand instance, int? position) 
+                    => NugetSuggestions.GetSuggestions(PreRelease: instance.Prerelease,
+                            Match: instance.TemplateNameArg, NugetSource: instance.NugetSource,
                             PackageType: NugetPackageType.Template);
-
+            }
         }
 
         internal class NewInstallCommand : NewHiddenNuGetCommand
@@ -91,4 +93,6 @@ namespace System.CommandLine.Tests.ConventionFree
                 => throw new NotImplementedException();
         }
     }
+
+ 
 }

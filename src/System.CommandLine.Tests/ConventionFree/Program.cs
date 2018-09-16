@@ -10,7 +10,7 @@ namespace System.CommandLine.Tests.ConventionFree
     {
         static void Main(string[] args)
         {
-            var builder = MakeCommandBuilder<RootCommand>();
+            var builder = ConventionFreeHelpers.MakeCommandBuilder<RootCommand>();
             // Parent command cannot short circuit a subcommand if the subcommand is specified on the
             // command line.  e.g. dotnet --info new "console" will cause the new subcommand to run and not
             // the dotnet rootcommand processing --info.
@@ -28,7 +28,7 @@ namespace System.CommandLine.Tests.ConventionFree
             var siblingTypeLookup = GetSiblingTypeLookup(type);
             var name = type.Name.StripCommandName();
             var builder = new CommandLineBuilder(name);
-            builder.AddSubCommands(siblingTypeLookup, type);
+            builder.FillCommand(type,siblingTypeLookup);
 
             return builder;
         }
@@ -45,12 +45,19 @@ namespace System.CommandLine.Tests.ConventionFree
         }
 
 
+
     }
 
     public static class ConventionFreeExtensions
     {
+        public static void FillCommand(this CommandBuilder commandBuilder,Type type, Dictionary<Type, Type> siblingTypeLookup)
+        {
+            commandBuilder.AddArgument(type);
+            commandBuilder.AddOptions(type);
+            commandBuilder.AddSubCommands(type, siblingTypeLookup: siblingTypeLookup);
+        }
 
-        public CommandBuilder AddArgument(this CommandBuilder commandBuilder, Type type)
+        public static CommandBuilder AddArgument(this CommandBuilder commandBuilder, Type type)
         {
             var property = type
                             .GetProperties()
@@ -58,15 +65,18 @@ namespace System.CommandLine.Tests.ConventionFree
                             .SingleOrDefault();
 
             var argType = property.PropertyType;
-            return typeof(Argument<>).IsAssignableFrom(argType)
-                  ? AddArgumentFromWrapper(commandBuilder, argType, property)
-                  : AddArgumentDirectType(commandBuilder, argType, property);
+            if (typeof(Core.Argument).IsAssignableFrom(argType))
+            {
+                return AddArgumentFromWrapper(commandBuilder, argType, type, property);
+            }
+            return AddArgumentDirectType(commandBuilder, argType, property);
         }
 
-        private CommandBuilder AddArgumentDirectType(CommandBuilder commandBuilder, Type argType, PropertyInfo property)
+        private static CommandBuilder AddArgumentDirectType(CommandBuilder commandBuilder, Type argType, PropertyInfo property)
         {
             var name = property.Name;
             bool isZeroAllowed = false;
+            string help = string.Empty;
 
             var argAttribute = property.GetCustomAttribute<ArgumentAttribute>(true);
             if (argAttribute != null)
@@ -76,42 +86,75 @@ namespace System.CommandLine.Tests.ConventionFree
                     name = argAttribute.Name;
                 }
                 isZeroAllowed = argAttribute.Optional;
+                help = argAttribute.Help;
             }
 
-            ArgumentArityValidator arity = null;
-            var
-            if (attribute == null)
-            {
-
-            }
-            var name = "Fred";
-            var arg = commandBuilder.Arguments.ExactlyOne();
+            // @jonsequitur How do we express whether zero arity is allowed for either multiple or single
             var arg2 = commandBuilder.Arguments
-                        .WithHelp(name, "")
-                        .ParseArgumentsAs(type, null, arity);
+                        .WithHelp(name, help)
+                        .ParseArgumentsAs(argType);
+            return commandBuilder;
         }
 
-        private CommandBuilder AddArgumentFromWrapper(CommandBuilder commandBuilder, Type argType)
+        // KAD: This signature has redundancy. Clean up. 
+        private static CommandBuilder AddArgumentFromWrapper(CommandBuilder commandBuilder,
+                Type wrapperType, Type containingType, PropertyInfo property)
         {
-            throw new NotImplementedException();
+            if (!wrapperType.IsConstructedGenericType
+                && typeof(Core.Argument).IsAssignableFrom(wrapperType)
+                && (typeof(Core.Command).IsAssignableFrom(containingType)
+                    || typeof(Core.Option).IsAssignableFrom(containingType)))
+            {
+                throw new InvalidOperationException("AddArgumentFromWrapper only callable on an Argument<T> propertyin a Command class");
+            }
+
+            var name = property.Name;
+            bool isZeroAllowed = false;
+            string help = string.Empty;
+            var argType = wrapperType
+                            .GetGenericArguments()
+                            .First();
+
+            var argAttribute = property.GetCustomAttribute<ArgumentAttribute>(true);
+            if (argAttribute != null)
+            {
+                if (!string.IsNullOrWhiteSpace(argAttribute.Name))
+                {
+                    name = argAttribute.Name;
+                }
+                isZeroAllowed = argAttribute.Optional;
+                help = argAttribute.Help;
+            }
+
+            Func<ParseResult, int?, IEnumerable<string>> suggestions =
+                           (parseResult, position)
+                           => GetSuggestions(parseResult, position, containingType, p => ((Core.Argument)property.GetValue(p)).Suggestions);
+
+            // @jonsequitur How do we express whether zero arity is allowed for either multiple or single
+            var arg2 = commandBuilder.Arguments
+                        .WithHelp(name, help)
+                        .ParseArgumentsAs(argType);
+            return commandBuilder;
         }
 
+        private static IEnumerable<string> GetSuggestions(ParseResult parseResult, int? position, Type containingType,
+                    string suggestionMethod)
+        {
+            var instance = Activator.CreateInstance(containingType);
+            // Fill with parse result - @MarkMichaelis
+            var methodInfo = containingType.GetMethod(suggestionMethod);
+            return (IEnumerable<string>)methodInfo.Invoke(instance, null);
+        }
 
-
-
-
-
-
-
-        public CommandBuilder AddOptions(this CommandBuilder builder, Type type)
+        public static CommandBuilder AddOptions(this CommandBuilder builder, Type type)
         {
             var properties = type
                             .GetProperties()
                             .Where(x => x.GetCustomAttribute(typeof(ArgumentAttribute), true) == null);
-
+            throw new NotImplementedException();
         }
 
-        public CommandBuilder AddSubCommands(this CommandBuilder builder, Dictionary<Type, Type> siblingTypeLookup, Type type)
+        public static CommandBuilder AddSubCommands(this CommandBuilder builder, Type type, Dictionary<Type, Type> siblingTypeLookup)
         {
             throw new NotImplementedException();
         }
