@@ -1,4 +1,4 @@
-﻿using System.CommandLine.Tests.ConventionFree.Core;
+using System.CommandLine.Tests.ConventionFree.Core;
 using System.Threading.Tasks;
 
 namespace System.CommandLine.Tests.ConventionFree
@@ -58,7 +58,7 @@ namespace System.CommandLine.Tests.ConventionFree
 
             public override Task<int> InvokeAsync()
             {
-                string tName = TemplateNameOption.Value;
+                string templateName = TemplateNameArg;
                 throw new NotImplementedException();
             }
         }
@@ -66,7 +66,6 @@ namespace System.CommandLine.Tests.ConventionFree
         [Alias("l")]
         internal class NewListCommand : NewHiddenNuGetCommand
         {
-            [Option()] // DefaultValue = FilterType.Project for C# 6
             public FilterType Type { get; set; } = FilterType.Project;
 
             public override Task<int> InvokeAsync()

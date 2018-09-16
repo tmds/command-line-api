@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace System.CommandLine.Tests.ConventionFree
+namespace System.CommandLine.Tests.ConventionFree.Core
 {
     public class Option<T>
     {
