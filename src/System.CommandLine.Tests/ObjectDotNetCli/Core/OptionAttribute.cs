@@ -1,4 +1,4 @@
-namespace System.CommandLine.Tests.SampleDotNetCli.Core
+namespace System.CommandLine.Tests.ObjectDotNetCli.Core
 {
     public class OptionAttribute : Attribute
     {

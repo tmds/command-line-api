@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using System.CommandLine.Tests.SampleDotNetCli.Core;
+using System.CommandLine.Tests.ObjectDotNetCli.Core;
 
-namespace System.CommandLine.Tests.SampleDotNetCli
+namespace System.CommandLine.Tests.ObjectDotNetCli
 {
     internal class RootCommand : Core.Command
     {

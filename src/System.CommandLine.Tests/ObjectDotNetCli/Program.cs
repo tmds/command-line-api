@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace System.CommandLine.Tests.SampleDotNetCli
+namespace System.CommandLine.Tests.ObjectDotNetCli
 {
     public class Program
     {

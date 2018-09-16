@@ -1,4 +1,4 @@
-namespace System.CommandLine.Tests.SampleDotNetCli.Core
+namespace System.CommandLine.Tests.ObjectDotNetCli.Core
 {
     internal class AliasAttribute : Attribute
     {

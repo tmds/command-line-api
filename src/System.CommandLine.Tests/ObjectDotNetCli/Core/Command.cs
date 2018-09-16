@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace System.CommandLine.Tests.SampleDotNetCli.Core
+namespace System.CommandLine.Tests.ObjectDotNetCli.Core
 {
     // LATER: Place interface in a separate file
     public interface ICommand

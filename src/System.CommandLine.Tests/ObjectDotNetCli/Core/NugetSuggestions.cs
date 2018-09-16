@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace System.CommandLine.Tests.SampleDotNetCli.Core
+namespace System.CommandLine.Tests.ObjectDotNetCli.Core
 {
     public static class NugetSuggestions 
     {

@@ -1,4 +1,4 @@
-namespace System.CommandLine.Tests.SampleDotNetCli
+namespace System.CommandLine.Tests.ObjectDotNetCli
 {
     public class ArgumentAttribute : Attribute
     {
