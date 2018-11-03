@@ -21,7 +21,7 @@ namespace System.CommandLine.Tests.ConventionFree
             Other
         }
 
-        [Command(Hide: true)]
+        [Command(hide: true)]
         internal abstract class NewHiddenNuGetCommand : NewCommand
         {
             public NewHiddenNuGetCommand()
@@ -30,17 +30,17 @@ namespace System.CommandLine.Tests.ConventionFree
                 //     suggestions: SuggestionFunc);
             }
 
-            [Argument(help:"I still need help, ZOMBIES", suggestionProvider:typeof(TemplateNameSuggestionProvider)]
+            [Argument(help: "I still need help, ZOMBIES", suggestionProvider: typeof(TemplateNameSuggestionProvider))]
             public string TemplateNameArg { get; }
             [Option(alias: "lang", suggestions: new string[] { "C#", "VB", "F#", "FORTRAN 77" },
-                help:"OMG Help me")]
+                help: "OMG Help me")]
             public string Language { get; }
             public bool Prerelease { get; set; }
             public string NugetSource { get; set; }
 
             public class TemplateNameSuggestionProvider : ISuggestionProvider<NewHiddenNuGetCommand>
             {
-                public IEnumerable<string> ProvideSuggestions(NewHiddenNuGetCommand instance, int? position) 
+                public IEnumerable<string> ProvideSuggestions(NewHiddenNuGetCommand instance, int? position)
                     => NugetSuggestions.GetSuggestions(PreRelease: instance.Prerelease,
                             Match: instance.TemplateNameArg, NugetSource: instance.NugetSource,
                             PackageType: NugetPackageType.Template);
@@ -78,21 +78,25 @@ namespace System.CommandLine.Tests.ConventionFree
         {
             public NewUninstallCommand()
             {
-                TemplateName = new Argument<string>(
-                     suggestions: SuggestionFunc);
+                //TemplateName = new Argument<string>(
+                //     suggestions: SuggestionFunc);
             }
 
-            public Argument<string> TemplateName { get; private set; }
-
-            private readonly string _templateDirectory = "";
-
-            public  Func<string[]> SuggestionFunc
-                => () => FileSuggestions.GetSuggestions(_templateDirectory);
+            [Argument(help: "I still need help, TIGERS", suggestionProvider: typeof(ExistingTemplateSuggestionProvider))]
+            public string TemplateName { get; private set; }
 
             public override Task<int> InvokeAsync()
                 => throw new NotImplementedException();
+
+            public class ExistingTemplateSuggestionProvider : ISuggestionProvider<NewUninstallCommand>
+            {
+                private readonly string _templateDirectory = "";
+
+                public IEnumerable<string> ProvideSuggestions(NewUninstallCommand instance, int? position)
+                    => FileSuggestions.GetSuggestions(_templateDirectory);
+            }
         }
     }
 
- 
+
 }

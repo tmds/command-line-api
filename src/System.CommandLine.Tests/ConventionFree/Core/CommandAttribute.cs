@@ -1,14 +1,16 @@
-namespace System.CommandLine.Tests.ConventionFree
+﻿namespace System.CommandLine.Tests.ConventionFree
 {
     public class CommandAttribute : Attribute
     {
-        private readonly string _name;
-        private readonly bool _hide;
+        public string Name { get; }
+        public string Help { get; }
+        public bool   Hide { get; }
 
-        public CommandAttribute(string Name = null, bool Hide=false)
+        public CommandAttribute(string name = null,string help=null, bool hide=false)
         {
-            _name = Name;
-            _hide = Hide;
+            Name = name;
+            Help = help;
+            Hide = hide;
         }
     }
 }
