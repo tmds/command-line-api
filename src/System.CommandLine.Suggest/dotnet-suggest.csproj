@@ -42,7 +42,7 @@
   <!-- Workaround https://github.com/dotnet/arcade/issues/2233 -->
   <Target Name="_InitializeAssemblyVersion" BeforeTargets="GetAssemblyVersion">
     <PropertyGroup>
-      <FileVersion><FileVersion/>
+      <FileVersion></FileVersion>
     </PropertyGroup>
   </Target>
 </Project>
